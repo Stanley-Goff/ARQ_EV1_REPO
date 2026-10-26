@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Convertidor de enteros y texto</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 18px;
+            background: #f4f6f8;
+            color: #17202a;
+        }
+        section {
+            background: white;
+            padding: 22px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid #dfe4ea;
+        }
+        label { display: block; margin-top: 12px; font-weight: 600; }
+        input, select, textarea, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font: inherit;
+        }
+        button {
+            margin-top: 16px;
+            background: #17365d;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; border-bottom: 1px solid #ddd; padding: 9px; }
+        .errorlist { color: #b42318; }
+        .resultado { overflow-wrap: anywhere; }
+        code { background: #eef1f5; padding: 3px; }
+        a { color: #174ea6; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Convertidor de enteros con signo y codificación de texto</h1>
+        <p>Complemento a 2, bases numéricas, Unicode, UTF-8 y UTF-16.</p>
+        <a href="{% url 'historial' %}">Consultar historial completo (últimas 10)</a>
+    </header>
+
+    <main>
+        <section>
+            <h2>Conversión de enteros</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="tipo" value="numero">
+
+                {{ formulario_numero.non_field_errors }}
+
+                <label for="{{ formulario_numero.numero.id_for_label }}">
+                    Número entero decimal
+                </label>
+                {{ formulario_numero.numero }}
+                {{ formulario_numero.numero.errors }}
+
+                <label for="{{ formulario_numero.bits.id_for_label }}">
+                    Tamaño en bits
+                </label>
+                {{ formulario_numero.bits }}
+                {{ formulario_numero.bits.errors }}
+
+                <button type="submit">Convertir entero</button>
+            </form>
+
+            {% if resultado_numero %}
+                <div class="resultado">
+                    <h3>Resultado</h3>
+                    <p>Decimal: <strong>{{ resultado_numero.numero }}</strong></p>
+                    <p>Rango admitido: {{ resultado_numero.minimo }} a {{ resultado_numero.maximo }}</p>
+                    <p>Binario en complemento a 2: <code>{{ resultado_numero.binario_agrupado }}</code></p>
+                    <p>Hexadecimal: <code>{{ resultado_numero.hexadecimal }}</code></p>
+                    <p>Octal: <code>{{ resultado_numero.octal }}</code></p>
+                    <p>
+                        Bit de signo: <strong>{{ resultado_numero.bit_signo }}</strong>
+                        ({{ resultado_numero.interpretacion_signo }})
+                    </p>
+                    <p>Interpretación sin signo: <strong>{{ resultado_numero.sin_signo }}</strong></p>
+                </div>
+            {% endif %}
+        </section>
+
+        <section>
+            <h2>Análisis de texto</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="tipo" value="texto">
+
+                <label for="{{ formulario_texto.texto.id_for_label }}">
+                    Texto (máximo 15 puntos de código Unicode)
+                </label>
+                {{ formulario_texto.texto }}
+                {{ formulario_texto.texto.errors }}
+
+                <button type="submit">Analizar texto</button>
+            </form>
+
+            {% if resultado_texto %}
+                <h3>Caracteres codificados</h3>
+                <p>Texto: <code>{{ resultado_texto.texto }}</code></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Carácter</th>
+                            <th>Punto de código</th>
+                            <th>Bytes UTF-8 (hex)</th>
+                            <th>Bytes UTF-8</th>
+                            <th>Bytes UTF-16</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in resultado_texto.caracteres %}
+                            <tr>
+                                <td>{{ item.caracter }}</td>
+                                <td><code>{{ item.codigo_unicode }}</code></td>
+                                <td><code>{{ item.utf8_hex }}</code></td>
+                                <td>{{ item.bytes_utf8 }}</td>
+                                <td>{{ item.bytes_utf16 }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5">El texto está vacío.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p>Total de bytes UTF-8: <strong>{{ resultado_texto.total_utf8 }}</strong></p>
+                <p>Total de bytes UTF-16: <strong>{{ resultado_texto.total_utf16 }}</strong></p>
+            {% endif %}
+        </section>
+
+        <section>
+            <h2>Historial reciente</h2>
+            {% include "conversor/tabla_historial.html" %}
+        </section>
+    </main>
+</body>
+</html>

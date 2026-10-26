@@ -1,0 +1,15 @@
+#Definir el servicio web con Docker Compose
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: convertidor-enteros
+    ports:
+      - "8000:8000"
+    volumes:
+      #Persistir SQLite fuera del ciclo de vida del contenedor
+      - ./data:/app/data
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped

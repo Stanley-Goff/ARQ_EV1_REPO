@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historial de conversiones</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 1100px; margin: 35px auto; padding: 0 18px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 9px; border-bottom: 1px solid #ddd; text-align: left; }
+        code { overflow-wrap: anywhere; }
+    </style>
+</head>
+<body>
+    <h1>Historial de conversiones numéricas</h1>
+    <p>Se muestran como máximo las diez conversiones más recientes.</p>
+    <p><a href="{% url 'inicio' %}">Volver al convertidor</a></p>
+
+    {% include "conversor/tabla_historial.html" %}
+</body>
+</html>

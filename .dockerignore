@@ -1,0 +1,11 @@
+#Excluir archivos locales del contexto de construcción
+.venv/
+__pycache__/
+*.py[cod]
+.git/
+.gitignore
+evidencias/
+data/*.sqlite3
+data/*.sqlite3-journal
+data/*.sqlite3-wal
+data/*.sqlite3-shm

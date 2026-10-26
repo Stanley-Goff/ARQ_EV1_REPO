@@ -1,0 +1,10 @@
+#Exclusion de archivos locales y datos generados
+.venv/
+__pycache__/
+*.py[cod]
+.env
+data/*.sqlite3
+data/*.sqlite3-journal
+data/*.sqlite3-wal
+data/*.sqlite3-shm
+staticfiles/

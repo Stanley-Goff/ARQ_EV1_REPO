@@ -1,0 +1,30 @@
+<table>
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Decimal</th>
+            <th>Bits</th>
+            <th>Binario</th>
+            <th>Hexadecimal</th>
+            <th>Octal</th>
+            <th>Sin signo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in historial %}
+            <tr>
+                <td>{{ item.fecha|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ item.numero }}</td>
+                <td>{{ item.bits }}</td>
+                <td><code>{{ item.binario }}</code></td>
+                <td><code>{{ item.hexadecimal }}</code></td>
+                <td><code>{{ item.octal }}</code></td>
+                <td>{{ item.sin_signo }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">Todavía no hay conversiones registradas.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
